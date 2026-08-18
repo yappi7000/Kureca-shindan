@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>おすすめクレカ発行&活用ルート診断チェックシート｜やっぴ〜Presents</title>
+<style>
+  :root{
+    --blue:#1e6fe0;
+    --blue-light:#eef5ff;
+    --blue-border:#cfe0f7;
+    --text:#2a3b55;
+    --line-green:#06c755;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#f6f9ff;
+    font-family:'Hiragino Sans','Noto Sans JP',system-ui,sans-serif;
+    color:var(--text);
+    padding:24px 16px 60px;
+  }
+  .wrap{max-width:640px;margin:0 auto;}
+
+  /* ==== やっぴ〜Presents 共通バッジ ==== */
+  .yappi-badge{
+    display:inline-block;background:var(--blue);color:#fff;
+    font-size:12px;font-weight:700;padding:4px 12px;
+    border-radius:20px;letter-spacing:.05em;
+  }
+
+  /* ==== 巻頭ブロック ==== */
+  .yappi-header{
+    background:var(--blue-light);border:1px solid var(--blue-border);
+    border-radius:14px;padding:16px 20px;margin-bottom:20px;
+  }
+  .yappi-header p{margin:10px 0 0;font-size:14px;line-height:1.7;}
+
+  /* ==== 診断本体 ==== */
+  .card{
+    background:#fff;border:1px solid #e3eaf5;border-radius:16px;
+    padding:24px 20px;margin-bottom:16px;
+    box-shadow:0 2px 10px rgba(30,111,224,.05);
+  }
+  h1{font-size:20px;margin:0 0 6px;color:var(--text);}
+  .lead{font-size:13px;color:#6b7c93;margin:0 0 20px;}
+  .q{margin-bottom:26px;}
+  .q-num{font-size:11px;color:var(--blue);font-weight:700;letter-spacing:.05em;}
+  .q-title{font-size:15px;font-weight:700;margin:4px 0 4px;}
+  .q-sub{font-size:12px;color:#8492a6;margin-bottom:10px;}
+  .opts{display:flex;flex-direction:column;gap:8px;}
+  .opt{
+    display:flex;align-items:center;gap:10px;
+    border:1px solid #e3eaf5;border-radius:10px;
+    padding:10px 12px;cursor:pointer;font-size:14px;
+    transition:.15s;
+  }
+  .opt:hover{border-color:var(--blue);}
+  .opt.selected{background:var(--blue-light);border-color:var(--blue);}
+  .opt input{accent-color:var(--blue);}
+  .opt .en{color:#9aa8bb;font-size:11px;margin-left:auto;}
+
+  .diagnose-btn{
+    width:100%;padding:14px;border:none;border-radius:12px;
+    background:#c7d4e8;color:#fff;font-size:15px;font-weight:700;
+    cursor:not-allowed;transition:.2s;
+  }
+  .diagnose-btn.ready{background:var(--blue);cursor:pointer;}
+  .btn-note{text-align:center;font-size:11px;color:#9aa8bb;margin-top:8px;}
+
+  /* ==== 結果 ==== */
+  .result{display:none;}
+  .result.show{display:block;}
+  .result-genre{
+    font-size:22px;font-weight:800;color:var(--blue);margin:4px 0 10px;
+  }
+  .result-reason{list-style:none;padding:0;margin:0 0 16px;}
+  .result-reason li{
+    font-size:13px;line-height:1.7;padding-left:18px;position:relative;margin-bottom:6px;
+  }
+  .result-reason li::before{
+    content:"・";position:absolute;left:0;color:var(--blue);
+  }
+  .redo{
+    display:inline-block;font-size:12px;color:var(--blue);
+    text-decoration:underline;cursor:pointer;margin-top:8px;
+  }
+
+  /* ==== 巻末ブロック ==== */
+  .yappi-footer{
+    background:var(--blue-light);border:1px solid var(--blue-border);
+    border-radius:14px;padding:20px;margin-top:24px;text-align:center;
+  }
+  .yappi-footer p{margin:8px 0 16px;font-size:14px;line-height:1.7;}
+  .line-btn{
+    display:inline-block;background:var(--line-green);color:#fff;
+    font-weight:700;font-size:15px;padding:12px 28px;
+    border-radius:999px;text-decoration:none;
+  }
+  .disclaimer{font-size:11px;color:#9aa8bb;text-align:center;margin-top:16px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ ① 巻頭：やっぴ〜Presents ============ -->
+  <div class="yappi-header">
+    <span class="yappi-badge">やっぴ〜 Presents</span>
+    <p>
+      この診断は、通信費・カード最適化を専門にやってる「やっぴ〜」が作成した無料ツールだよ📝<br>
+      いくつかの質問に答えるだけで、あなたに合うクレカのジャンルと組み方がわかる！気軽にやってみてね✨
+    </p>
+  </div>
+
+  <!-- ============ 診断本体 ============ -->
+  <div class="card">
+    <h1>おすすめクレカ発行&活用ルート診断</h1>
+    <p class="lead">質問に答えると、あなたに合ったカードのジャンルと組み方がわかります</p>
+
+    <form id="quiz">
+
+      <div class="q" data-q="q1">
+        <div class="q-num">Q1</div>
+        <div class="q-title">月あたりのカード利用額はどれくらい？</div>
+        <div class="q-sub">単一選択（生活費・事業費の合計でOK）</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q1" value="Light"><span>5万円未満</span><span class="en">Light</span></label>
+          <label class="opt"><input type="radio" name="q1" value="Standard"><span>5〜15万円</span><span class="en">Standard</span></label>
+          <label class="opt"><input type="radio" name="q1" value="Heavy"><span>15〜30万円</span><span class="en">Heavy</span></label>
+          <label class="opt"><input type="radio" name="q1" value="Pro"><span>30万円以上（事業利用含む）</span><span class="en">Pro</span></label>
+        </div>
+      </div>
+
+      <div class="q" data-q="q2">
+        <div class="q-num">Q2</div>
+        <div class="q-title">重視したいジャンルは？</div>
+        <div class="q-sub">複数選択可（気になるものすべてチェック）</div>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="q2" value="Hotel"><span>ホテル系（上級会員・宿泊特典）</span><span class="en">Hotel</span></label>
+          <label class="opt"><input type="checkbox" name="q2" value="Mile"><span>マイル系（陸マイラー・飛行機好き）</span><span class="en">Mile</span></label>
+          <label class="opt"><input type="checkbox" name="q2" value="Corp"><span>コーポレート系（事業用・経費管理）</span><span class="en">Corp</span></label>
+          <label class="opt"><input type="checkbox" name="q2" value="Daily"><span>日常高還元（生活費をとにかく圧縮）</span><span class="en">Daily</span></label>
+        </div>
+      </div>
+
+      <div class="q" data-q="q3">
+        <div class="q-num">Q3</div>
+        <div class="q-title">カードを持つ一番の目的は？</div>
+        <div class="q-sub">単一選択</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q3" value="Campaign"><span>入会キャンペーンの特典が欲しい（短期）</span><span class="en">Campaign</span></label>
+          <label class="opt"><input type="radio" name="q3" value="Main"><span>長期のメインカードとして使いたい</span><span class="en">Main</span></label>
+          <label class="opt"><input type="radio" name="q3" value="Sub"><span>用途別のサブカードを増やしたい</span><span class="en">Sub</span></label>
+        </div>
+      </div>
+
+      <div class="q" data-q="q4">
+        <div class="q-num">Q4</div>
+        <div class="q-title">年会費についての考え方は？</div>
+        <div class="q-sub">単一選択</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q4" value="Free"><span>年会費は無料・実質無料にこだわりたい</span><span class="en">Free</span></label>
+          <label class="opt"><input type="radio" name="q4" value="Worth it"><span>利用額で元が取れるなら払ってもいい</span><span class="en">Worth it</span></label>
+          <label class="opt"><input type="radio" name="q4" value="Premium"><span>プラチナ級の特典に価値を感じる</span><span class="en">Premium</span></label>
+        </div>
+      </div>
+
+      <div class="q" data-q="q5">
+        <div class="q-num">Q5</div>
+        <div class="q-title">カードを一番よく使うシーンは？</div>
+        <div class="q-sub">複数選択可</div>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="q5" value="Daily"><span>コンビニ・スーパーなど日常の少額決済</span><span class="en">Daily</span></label>
+          <label class="opt"><input type="checkbox" name="q5" value="Online"><span>ネット通販・サブスクなどオンライン中心</span><span class="en">Online</span></label>
+          <label class="opt"><input type="checkbox" name="q5" value="Business"><span>出張・接待・仕入れなど事業関連の支払い</span><span class="en">Business</span></label>
+          <label class="opt"><input type="checkbox" name="q5" value="Travel"><span>旅行・宿泊・空港での支払い</span><span class="en">Travel</span></label>
+        </div>
+      </div>
+
+      <div class="q" data-q="q6">
+        <div class="q-num">Q6</div>
+        <div class="q-title">年間の海外渡航（出張含む）頻度は？</div>
+        <div class="q-sub">単一選択</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q6" value="Domestic"><span>年0回（国内メイン）</span><span class="en">Domestic</span></label>
+          <label class="opt"><input type="radio" name="q6" value="Occasional"><span>年1〜2回</span><span class="en">Occasional</span></label>
+          <label class="opt"><input type="radio" name="q6" value="Frequent"><span>年3回以上</span><span class="en">Frequent</span></label>
+        </div>
+      </div>
+
+      <div class="q" data-q="q7">
+        <div class="q-num">Q7</div>
+        <div class="q-title">カードの持ち方の方針は？</div>
+        <div class="q-sub">単一選択</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q7" value="1 card"><span>1枚にまとめてシンプルに管理したい</span><span class="en">1 card</span></label>
+          <label class="opt"><input type="radio" name="q7" value="2-3 cards"><span>用途別に2〜3枚を使い分けたい</span><span class="en">2-3 cards</span></label>
+          <label class="opt"><input type="radio" name="q7" value="Optimize"><span>枚数は気にせず一番お得な組み合わせにしたい</span><span class="en">Optimize</span></label>
+        </div>
+      </div>
+
+      <div class="q" data-q="q8">
+        <div class="q-num">Q8</div>
+        <div class="q-title">貯めたポイントの使い道は？</div>
+        <div class="q-sub">単一選択</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q8" value="Cash-like"><span>現金同等（キャッシュバック・支払い充当）に使いたい</span><span class="en">Cash-like</span></label>
+          <label class="opt"><input type="radio" name="q8" value="Travel"><span>マイルやホテル特典など旅行系に交換したい</span><span class="en">Travel</span></label>
+          <label class="opt"><input type="radio" name="q8" value="Invest"><span>ポイント投資など資産運用に回したい</span><span class="en">Invest</span></label>
+        </div>
+      </div>
+
+      <button type="button" id="diagBtn" class="diagnose-btn">診断する →</button>
+      <p class="btn-note">全項目を選ぶとボタンが押せるようになります</p>
+    </form>
+  </div>
+
+  <!-- ============ 結果 ============ -->
+  <div class="card result" id="resultCard">
+    <div class="q-num">Diagnosis Result</div>
+    <div class="result-genre" id="resultGenre">—</div>
+    <ul class="result-reason" id="resultReason"></ul>
+    <span class="redo" id="redoBtn">もう一度診断する</span>
+  </div>
+
+  <p class="disclaimer">
+    ※本診断はジャンル・活用ルートの傾向を示す簡易チェックです。年会費や還元率、入会キャンペーンの内容は時期により変動するため、実際の発行前には各カード会社の公式サイトで最新条件を必ずご確認ください。
+  </p>
+
+  <!-- ============ ② 巻末：やっぴ〜Presents + LINE CTA ============ -->
+  <div class="yappi-footer">
+    <span class="yappi-badge">やっぴ〜 Presents</span>
+    <p>
+      診断結果は参考程度に📌<br>
+      「自分の場合はどれが一番お得？」「還元率まで詰めたい」って人は、
+      LINE公式でもっと具体的に相談乗ってるよ👇
+    </p>
+    <a href="https://lin.ee/AsTWK4D" target="_blank" rel="noopener" class="line-btn">
+      📩 LINE公式で相談する
+    </a>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const form = document.getElementById('quiz');
+  const btn = document.getElementById('diagBtn');
+  const resultCard = document.getElementById('resultCard');
+  const resultGenre = document.getElementById('resultGenre');
+  const resultReason = document.getElementById('resultReason');
+  const redoBtn = document.getElementById('redoBtn');
+
+  // 選択状態のハイライト & ボタン活性化
+  function refresh(){
+    form.querySelectorAll('.opt').forEach(opt=>{
+      const input = opt.querySelector('input');
+      opt.classList.toggle('selected', input.checked);
+    });
+    const required = ['q1','q3','q4','q6','q7','q8'];
+    const singleOk = required.every(name => form.querySelector(`input[name="${name}"]:checked`));
+    const multiOk = ['q2','q5'].every(name => form.querySelectorAll(`input[name="${name}"]:checked`).length > 0);
+    const ready = singleOk && multiOk;
+    btn.classList.toggle('ready', ready);
+    btn.disabled = !ready;
+  }
+  form.addEventListener('change', refresh);
+  refresh();
+
+  function val(name){
+    const el = form.querySelector(`input[name="${name}"]:checked`);
+    return el ? el.value : null;
+  }
+  function vals(name){
+    return Array.from(form.querySelectorAll(`input[name="${name}"]:checked`)).map(el=>el.value);
+  }
+
+  const GENRE_LABEL = {
+    Hotel: 'ホテル系カード',
+    Mile: 'マイル系カード',
+    Corp: 'コーポレートカード',
+    Daily: '日常高還元カード'
+  };
+
+  btn.addEventListener('click', function(){
+    if(!btn.classList.contains('ready')) return;
+
+    const q1 = val('q1'), q2 = vals('q2'), q3 = val('q3'), q4 = val('q4'),
+          q5 = vals('q5'), q6 = val('q6'), q7 = val('q7'), q8 = val('q8');
+
+    // スコアリング（Q2の選択を軸に、Q5/Q6/Q8で補正）
+    const score = { Hotel:0, Mile:0, Corp:0, Daily:0 };
+    q2.forEach(g => score[g] += 3);
+
+    if(q5.includes('Business')) score.Corp += 2;
+    if(q5.includes('Travel')){ score.Hotel += 1; score.Mile += 1; }
+    if(q5.includes('Daily')) score.Daily += 2;
+    if(q5.includes('Online')) score.Daily += 1;
+
+    if(q6 === 'Frequent'){ score.Mile += 2; score.Hotel += 1; }
+    if(q6 === 'Occasional') score.Mile += 1;
+
+    if(q8 === 'Travel'){ score.Mile += 2; score.Hotel += 1; }
+    if(q8 === 'Cash-like') score.Daily += 2;
+    if(q8 === 'Invest') score.Corp += 1;
+
+    const ranked = Object.entries(score).sort((a,b)=>b[1]-a[1]);
+    const topGenre = ranked[0][1] > 0 ? ranked[0][0] : 'Daily';
+    const secondGenre = ranked[1][1] > 0 && ranked[1][1] >= ranked[0][1]-1 ? ranked[1][0] : null;
+
+    // 理由（根拠）を組み立て
+    const reasons = [];
+    reasons.push(`重視ジャンルで「${q2.map(g=>GENRE_LABEL[g]).join('・')}」を選んでるから、${GENRE_LABEL[topGenre]}が土台に合う`);
+
+    if(q4 === 'Free') reasons.push('年会費は無料・実質無料志向 → 年会費フリーorライトな年会費のカードを軸に選ぶのがおすすめ');
+    if(q4 === 'Worth it') reasons.push('利用額で元が取れればOK派 → 年会費ありでも還元率・特典が強いカードまで検討範囲');
+    if(q4 === 'Premium') reasons.push('プラチナ級の特典に価値を感じるタイプ → 上位カード（プロパー/コーポレート系プラチナ等）も視野に');
+
+    if(q7 === '1 card') reasons.push('1枚にまとめたい方針 → メイン利用シーンに一番効くジャンルのカード1枚に絞るのが吉');
+    if(q7 === '2-3 cards') reasons.push('用途別に2〜3枚派 → ' + GENRE_LABEL[topGenre] + (secondGenre ? `＋${GENRE_LABEL[secondGenre]}` : '') + 'の組み合わせが候補');
+    if(q7 === 'Optimize') reasons.push('枚数は気にせず最適化したい派 → 利用シーンごとに複数枚を使い分けるルートが向いてる');
+
+    if(q3 === 'Campaign') reasons.push('入会特典狙いなら、まずは今の重視ジャンルで入会キャンペーンが強い時期のカードから');
+    if(q3 === 'Main') reasons.push('長期メインカード狙い → 還元率と特典の持続性を重視して選ぶのが正解');
+    if(q3 === 'Sub') reasons.push('サブカード追加派 → 今のメインカードと被らないジャンルを補完する形で選ぶと効率的');
+
+    resultGenre.textContent = GENRE_LABEL[topGenre] + (secondGenre ? ` × ${GENRE_LABEL[secondGenre]}` : '');
+    resultReason.innerHTML = '';
+    reasons.slice(0,5).forEach(r=>{
+      const li = document.createElement('li');
+      li.textContent = r;
+      resultReason.appendChild(li);
+    });
+
+    resultCard.classList.add('show');
+    resultCard.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  redoBtn.addEventListener('click', function(){
+    form.reset();
+    refresh();
+    resultCard.classList.remove('show');
+    form.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+})();
+</script>
+</body>
+</html>
